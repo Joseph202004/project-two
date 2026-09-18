@@ -232,3 +232,20 @@ h1, h2, .sec, .sectitle, .screen-head h1, .appbar .title, .greet .tx b{ letter-s
 .trip .endbtn{ color: var(--ds-blue-900); border-radius: var(--geist-radius) }
 .impact, .idcard, .profhead{ background: var(--ds-red-900) }
 .greet .me .avatar{ background: var(--ds-red-900); border-color: var(--ds-red-900) }
+
+/* harness: event simulation strip, kept outside the device */
+.simbar{width:100%; max-width:392px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+  padding:10px 12px; border:1px dashed var(--line-2); border-radius:var(--geist-radius);
+  background:var(--surface)}
+.simbar .k{font-size:10.5px; font-weight:600; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--text-3); width:100%}
+.simbar .btn{width:auto; flex:0 0 auto}
+
+/* calmer rhythm inside the device */
+.body{gap:11px; padding:14px 16px 18px}
+.body.tight{gap:9px}
+h3.sectitle{margin-top:6px}
+h3.sub{margin-top:4px}
+.banner{font-size:12.5px; padding:10px 12px}
+.banner b{font-size:13px}
+p.fine{font-size:12px}

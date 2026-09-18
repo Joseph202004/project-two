@@ -59,6 +59,7 @@ const FRESH = () => ({
   campaign: 0,
   amount: '500',
   switches: { loc: true, vib: true, alert: true, auto: false },
+  showNotes: false,
   modal: null,
   toast: null
 });
@@ -123,6 +124,35 @@ const rtabbar = (active) => `<nav class="tabbar" aria-label="Responder">
   ${[['Availability', I.avail, 'R03'], ['Requests', I.req, 'R04'], ['Activity', I.act, 'R09a'], ['Profile', I.prof, 'R09b']]
     .map(([n, ic, go]) => `<button type="button" data-go="${go}" aria-current="${active === n}">${ic}${n}</button>`).join('')}
 </nav>`;
+
+/* Which bottom tab owns each screen. Listed screens show the footer and highlight
+   their parent tab, so the bar stays put as you navigate deeper. Screens in neither
+   map deliberately have none: first-use onboarding, and the active-emergency flow,
+   where the brief requires regular navigation to be hidden. */
+const TAB_OF = {
+  U04: 'Home', U13: 'Home', U14: 'Home', U14b: 'Home', U15: 'Home', U16: 'Home',
+  M01: 'Medical',
+  T01: 'Safe Travel',
+  D01: 'Donate',
+  S01: 'Settings', U17: 'Settings', U18: 'Settings', U19: 'Settings',
+  U20a: 'Settings', U20b: 'Settings'
+};
+const RTAB_OF = {
+  R01: 'Profile', R02: 'Profile', R03: 'Availability', R04: 'Requests',
+  R05: 'Requests', R06: 'Requests', R07: 'Requests', R08: 'Requests',
+  R09a: 'Activity', R09b: 'Profile'
+};
+
+/* Event simulations live in the harness, not inside the device, so the phone
+   shows only what a real user would see. */
+const SIM = {
+  U06: [['Responder accepts', { act: 'accept' }], ['No responder available', { go: 'X05' }]],
+  U07: [['Responder marks arrived', { act: 'arrive' }], ['Responder withdraws', { go: 'X06' }]],
+  U10: [['Close community response', { act: 'close' }]],
+  R02: [['Approve application', { go: 'R03' }]],
+  R03: [['Send an invitation', { go: 'R04' }], ['Expire verification', { act: 'expire' }]],
+  U05: [['Send request', { act: 'send' }]]
+};
 
 const appbar = (title, sub, right) => `<header class="appbar">
   <div class="title">${title}${sub ? `<span class="sub">${sub}</span>` : ''}</div>${right || ''}</header>`;
@@ -248,9 +278,8 @@ def('U04', {
   </div>
   <div class="body">
     ${returnCard()}
-    ${btn('REQUEST NEARBY RESPONDER', { variant: 'primary', go: 'U05' })}
-    ${banner('info', 'Nearby responders provide community assistance.',
-      'They are trained volunteers, not professional emergency services.')}
+    ${btn('Request nearby responder', { go: 'U05' })}
+    <p class="fine">Community responders are trained volunteers, not professional emergency services.</p>
     <h3 class="sectitle">Emergency Helplines</h3>
     ${HELPLINES.map(([e, n, num, blue]) => `
       <button type="button" class="helpline" data-act="call">
@@ -259,12 +288,9 @@ def('U04', {
         <span class="num ${blue}">${num}</span>
         <span class="go ${blue}">${I.phone}</span></button>`).join('')}
     ${S.incident.stage === 'none' || S.incident.stage === 'closed' ? `
-      <h3 class="sectitle">Prepare before an emergency</h3>
-      ${btn('Find training', { row: true, chev: true, go: 'U14' })}
-      ${btn('Try a practice scenario', { row: true, chev: true, go: 'U15' })}
-      ${btn('Your activity', { row: true, chev: true, go: 'U16' })}` : ''}
-  </div>
-  ${tabbar('Home')}`
+      <h3 class="sectitle">Prepare</h3>
+      ${btn('Training, practice and activity', { variant: 'quiet', row: true, chev: true, go: 'U13' })}` : ''}
+  </div>`
 });
 
 /* ============================ MEDICAL TAB ============================ */
@@ -318,8 +344,7 @@ def('M01', {
       <div class="segmented" role="tablist" aria-label="Medical sections">
         ${seg('My Profile')}${seg('First Aid')}${seg('Nearby AEDs')}</div>
       ${inner}
-    </div>
-    ${tabbar('Medical')}`;
+    </div>`;
   }
 });
 
@@ -361,8 +386,7 @@ def('T01', {
       <div class="tip"><span class="e">🔋</span>Keep your phone charged and carry a cable.</div>
       <div class="tip"><span class="e">🧰</span>Carry water and a basic first aid kit.</div>
     </div>
-  </div>
-  ${tabbar('Safe Travel')}`
+  </div>`
 });
 
 /* ============================ DONATE TAB ============================ */
@@ -398,8 +422,7 @@ def('D01', {
       <input class="input" value="${S.amount}" aria-label="Donation amount" /></div>
     ${btn('Continue to payment', { variant: 'primary', act: 'donate' })}
     ${banner('info', 'Donations fund the programme, not individual incidents.', 'You cannot pay to receive a faster response, and responders are volunteers.')}
-  </div>
-  ${tabbar('Donate')}`
+  </div>`
 });
 
 /* ============================ SETTINGS TAB ============================ */
@@ -436,8 +459,7 @@ def('S01', {
       .map(([e, t, go]) => `<button type="button" class="setrow" data-go="${go}">
         <span class="e">${e}</span><span class="tx">${t}</span><span class="chev">${I.chev}</span></button>`).join('')}
     ${btn('Sign out', { variant: 'danger-ghost' })}
-  </div>
-  ${tabbar('Settings')}`
+  </div>`
 });
 
 def('U05', {
@@ -487,9 +509,6 @@ def('U06', {
     ${btn('Support while waiting', { row: true, chev: true, go: 'U08' })}
     ${btn('Add access information', { row: true, chev: true, go: 'U09' })}
     ${btn('Cancel community request', { variant: 'danger-ghost', act: 'askCancel' })}
-    <div class="divider"></div>
-    <p class="fine">Prototype controls: ${btn('Simulate responder accepting', { variant: 'sm', act: 'accept' })}
-      ${btn('Simulate no responder', { variant: 'sm', go: 'X05' })}</p>
   </div>`
 });
 
@@ -517,9 +536,6 @@ def('U07', {
     ${btn('Support while waiting', { row: true, chev: true, go: 'U08' })}
     ${callBtn('Call emergency services')}
     ${btn('Request details', { variant: 'quiet', row: true, chev: true, go: 'U16' })}
-    <div class="divider"></div>
-    <p class="fine">Prototype controls: ${btn('Responder marks arrived', { variant: 'sm', act: 'arrive' })}
-      ${btn('Responder withdraws', { variant: 'sm', go: 'X06' })}</p>
   </div>`
 });
 
@@ -586,8 +602,6 @@ def('U10', {
     <div class="card"><span class="k">Professional handover</span>
       ${st('wait', 'Not yet recorded')}
       <p class="fine">A community responder arriving does not mean emergency services have arrived.</p></div>
-    <div class="divider"></div>
-    <p class="fine">Prototype control: ${btn('Close community response', { variant: 'sm', act: 'close' })}</p>
   </div>`
 });
 
@@ -644,8 +658,7 @@ def('U13', {
     ${btn('Responder programme', { row: true, chev: true, go: 'R01' })}
     <h3 class="sub">My training</h3>
     <div class="empty">No upcoming sessions.<br />Registered sessions will appear here.</div>
-  </div>
-  ${tabbar('Learn')}`
+  </div>`
 });
 
 def('U14', {
@@ -712,8 +725,7 @@ def('U16', {
       <b>2 Aug · No responder available</b><span>View summary</span></div><span class="chev">${I.chev}</span></button>
     ${S.incident.stage === 'none' ? `<div class="empty">Requests you make will be listed here.</div>` : ''}
     <p class="fine">Summaries describe the community response only. Medical details are not stored here.</p>
-  </div>
-  ${tabbar('Activity')}`
+  </div>`
 });
 
 def('U17', {
@@ -736,8 +748,7 @@ def('U17', {
     ${btn('Apply to become a responder', { go: 'R01' })}
     ${S.responder.verificationValid ? btn('Switch to responder mode', { variant: 'primary', go: 'R03' }) : ''}
     <p class="fine">Responder mode is shown only to approved responders.</p>
-  </div>
-  ${tabbar('Profile')}`
+  </div>`
 });
 
 def('U18', {
@@ -851,8 +862,6 @@ def('R02', {
       </div></div>
     ${btn('Contact programme support', { row: true, chev: true })}
     ${btn('Return to public mode', { variant: 'quiet', go: 'U17' })}
-    <div class="divider"></div>
-    <p class="fine">Prototype control: ${btn('Approve this application', { variant: 'sm', go: 'R03' })}</p>
   </div>`
 });
 
@@ -882,11 +891,7 @@ def('R03', {
         ${btn('Open assignment', { variant: 'primary', go: 'R05' })}</div>` : ''}
     <div class="card"><span class="k">Programme notice</span>
       <p class="fine">Refresher session for Sector 4 responders on 27 Sep. Verification renewal opens 60 days before expiry.</p></div>
-    <div class="divider"></div>
-    <p class="fine">Prototype controls: ${btn('Send an invitation', { variant: 'sm', go: 'R04' })}
-      ${btn('Expire verification', { variant: 'sm', act: 'expire' })}</p>
-  </div>
-  ${rtabbar('Availability')}`
+  </div>`
 });
 
 def('R04', {
@@ -908,8 +913,7 @@ def('R04', {
     ${btn('ACCEPT REQUEST', { variant: 'primary', act: 'rAccept' })}
     ${btn('Decline', { variant: 'quiet', go: 'R03' })}
     <p class="fine">The exact address is shared only after you accept.</p>
-  </div>
-  ${rtabbar('Requests')}`
+  </div>`
 });
 
 def('R05', {
@@ -1010,8 +1014,7 @@ def('R09a', {
     ${btn('Submit a correction to a summary', { variant: 'quiet', row: true, chev: true })}
     ${btn('Report a concern', { variant: 'quiet', row: true, chev: true })}
     <p class="fine">You can see the summaries you recorded. You cannot see other responders&rsquo; records.</p>
-  </div>
-  ${rtabbar('Activity')}`
+  </div>`
 });
 
 def('R09b', {
@@ -1032,8 +1035,7 @@ def('R09b', {
     ${btn('Programme support', { row: true, chev: true })}
     <div class="divider"></div>
     ${btn('Switch to public mode', { variant: 'quiet', go: 'U04' })}
-  </div>
-  ${rtabbar('Profile')}`
+  </div>`
 });
 
 /* ============================ COORDINATOR DASHBOARD ============================ */
@@ -1512,21 +1514,31 @@ function render() {
   const practice = S.practice && ['U05', 'U06', 'U07', 'U08', 'U09', 'U10'].includes(current);
   const pbar = practice ? `<div class="practice-bar">${I.alert} Practice — no real alerts</div>` : '';
 
+  /* the footer is appended by the router so every screen that belongs to a tab
+     keeps it, and the active-emergency screens reliably do not */
+  const foot = TAB_OF[current] ? tabbar(TAB_OF[current])
+             : RTAB_OF[current] ? rtabbar(RTAB_OF[current]) : '';
+  const sim = SIM[current] || [];
+
   let device;
   if (s.kind === 'map') device = s.render();
   else if (s.kind === 'desktop') device = `<div class="desk"><div class="desk-screen">${s.render()}${overlay()}</div></div>`;
   else device = `<div class="phone"><div class="phone-screen">
       <div class="statusbar"><span>18:52</span><span>Prototype</span></div>
-      ${pbar}${s.render()}${overlay()}</div></div>`;
+      ${pbar}${s.render()}${foot}${overlay()}</div></div>`;
 
   canvas.innerHTML = `
     <div class="screen-head"><span class="sid">${s.id}</span>
       <div class="tx"><h1>${s.title}</h1><p>${s.group}</p></div>
       <div style="display:flex;gap:8px">
+        ${s.note ? `<button type="button" class="tbtn" data-act="notes"
+            aria-pressed="${S.showNotes}">Design rule</button>` : ''}
         ${btn('Screen map', { variant: 'sm', go: 'MAP' })}
       </div></div>
-    ${s.note ? `<div class="rule-note"><b>Design rule.</b> ${s.note}</div>` : ''}
-    ${device}`;
+    ${s.note && S.showNotes ? `<div class="rule-note"><b>Design rule.</b> ${s.note}</div>` : ''}
+    ${device}
+    ${sim.length ? `<div class="simbar"><span class="k">Simulate an event</span>
+      ${sim.map(([l, o]) => btn(l, Object.assign({ variant: 'sm' }, o))).join('')}</div>` : ''}`;
   canvas.scrollIntoView({ block: 'start' });
 }
 
@@ -1560,6 +1572,7 @@ function overlay() {
 
 const ACTIONS = {
   noop: () => {},
+  notes: () => { S.showNotes = !S.showNotes; },
   lang: (a) => { S.lang = a; },
   who: (a) => { S.who = a; },
   flip: () => {},
