@@ -26,7 +26,12 @@ const I = {
   act:   '<svg width="19" height="19" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11h4l2.2-5 3.4 10 2.2-5H19"/></svg>',
   prof:  '<svg width="19" height="19" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="7.4" r="3.5"/><path d="M4.2 18.4a6.8 6.8 0 0113.6 0"/></svg>',
   avail: '<svg width="19" height="19" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7.6"/><path d="M11 6.6V11l3 2"/></svg>',
-  req:   '<svg width="19" height="19" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.6h14M4 11h14M4 16.4h9"/></svg>'
+  req:   '<svg width="19" height="19" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.6h14M4 11h14M4 16.4h9"/></svg>',
+  med:   '<svg width="19" height="19" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="3.2" width="15.6" height="15.6" rx="4"/><path d="M11 7.6v6.8M7.6 11h6.8" stroke-linecap="round"/></svg>',
+  pin:   '<svg width="19" height="19" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M11 19.5s6.2-6 6.2-10.3A6.2 6.2 0 004.8 9.2C4.8 13.5 11 19.5 11 19.5z"/><circle cx="11" cy="9.1" r="2.3"/></svg>',
+  heart: '<svg width="19" height="19" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M11 18.2S3.4 13.6 3.4 8.6A3.9 3.9 0 0111 6.7a3.9 3.9 0 017.6 1.9c0 5-7.6 9.6-7.6 9.6z"/></svg>',
+  gear:  '<svg width="19" height="19" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="2.9"/><path d="M17.5 13.2a1.6 1.6 0 00.32 1.77l.06.06a1.9 1.9 0 11-2.7 2.7l-.06-.06a1.6 1.6 0 00-1.77-.32 1.6 1.6 0 00-.97 1.47v.17a1.9 1.9 0 11-3.8 0v-.09a1.6 1.6 0 00-1.05-1.47 1.6 1.6 0 00-1.77.32l-.06.06a1.9 1.9 0 11-2.7-2.7l.06-.06a1.6 1.6 0 00.32-1.77 1.6 1.6 0 00-1.47-.97H1.7a1.9 1.9 0 110-3.8h.09a1.6 1.6 0 001.47-1.05 1.6 1.6 0 00-.32-1.77l-.06-.06a1.9 1.9 0 112.7-2.7l.06.06a1.6 1.6 0 001.77.32h.08a1.6 1.6 0 00.97-1.47V1.9a1.9 1.9 0 113.8 0v.09a1.6 1.6 0 00.97 1.47 1.6 1.6 0 001.77-.32l.06-.06a1.9 1.9 0 112.7 2.7l-.06.06a1.6 1.6 0 00-.32 1.77v.08a1.6 1.6 0 001.47.97h.17a1.9 1.9 0 110 3.8h-.09a1.6 1.6 0 00-1.47.97z" transform="translate(1 1) scale(0.82)"/></svg>',
+  search: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><circle cx="7.1" cy="7.1" r="4.6"/><path d="M10.6 10.6L14 14"/></svg>'
 };
 
 /* ------------------------------------------------------------------ state */
@@ -49,6 +54,11 @@ const FRESH = () => ({
     professional: 'Not confirmed'
   },
   responder: { available: false, verificationValid: true, assignment: null, arrivedAt: null },
+  mtab: 'My Profile',
+  trip: true,
+  campaign: 0,
+  amount: '500',
+  switches: { loc: true, vib: true, alert: true, auto: false },
   modal: null,
   toast: null
 });
@@ -99,9 +109,15 @@ const toggleRow = (name, desc, on, id) => `<div class="toggle"><div class="tx"><
   <button type="button" class="switch" role="switch" aria-checked="${on}" data-act="flip" data-arg="${id}">
   ${on ? I.check + 'On' : 'Off'}</button></div>`;
 
+/* Five-tab bar: Home · Medical · Safe Travel · Donate · Settings.
+   Hidden entirely during an active emergency so the incident stays the only thing on screen. */
+const TABS = [
+  ['Home', I.home, 'U04'], ['Medical', I.med, 'M01'], ['Safe Travel', I.pin, 'T01'],
+  ['Donate', I.heart, 'D01'], ['Settings', I.gear, 'S01']
+];
 const tabbar = (active) => `<nav class="tabbar" aria-label="Main">
-  ${[['Home', I.home, 'U04'], ['Learn', I.learn, 'U13'], ['Activity', I.act, 'U16'], ['Profile', I.prof, 'U17']]
-    .map(([n, ic, go]) => `<button type="button" data-go="${go}" aria-current="${active === n}">${ic}${n}</button>`).join('')}
+  ${TABS.map(([n, ic, go]) =>
+    `<button type="button" data-go="${go}" aria-current="${active === n}">${ic}${n}</button>`).join('')}
 </nav>`;
 const rtabbar = (active) => `<nav class="tabbar" aria-label="Responder">
   ${[['Availability', I.avail, 'R03'], ['Requests', I.req, 'R04'], ['Activity', I.act, 'R09a'], ['Profile', I.prof, 'R09b']]
@@ -203,24 +219,225 @@ def('U03b', {
 });
 
 /* ============================ REQUEST HELP ============================ */
+const HELPLINES = [
+  ['🚑', 'Ambulance', '108', ''],
+  ['🚓', 'Police', '100', 'blue'],
+  ['🚒', 'Fire Brigade', '101', ''],
+  ['👩', 'Women Helpline', '1091', 'blue']
+];
+
 def('U04', {
-  group: 'Public — request help', title: 'Public home',
-  note: 'One obvious primary action. When an incident is active, preparedness content is replaced by a Return to active request card.',
-  render: () => `${appbar('<span class="wordmark">SWARN</span>',
-    'Community: Sector 4 pilot area', `<button class="iconbtn" data-go="U01">Language</button>`)}
+  group: 'Public — request help', title: 'Home — SOS',
+  note: 'Press-and-hold guards against accidental activation, and the hold can be released to cancel. Holding opens the dialler — it never claims an ambulance has been dispatched.',
+  render: () => `
+  <div class="greet">
+    <div class="tx"><small>Good morning,</small><b>Stay safe, Meera 👋</b></div>
+    <span class="me"><span class="avatar">M</span><i></i></span>
+  </div>
+  <div class="searchbar">${I.search}<span>Search hospitals, first aid, AED…</span></div>
+  <div class="sos-card">
+    <span class="k">Emergency SOS</span>
+    <div class="sos-wrap">
+      <div class="sos-ring" id="sos-ring"></div>
+      <div class="sos-glow"></div>
+      <button type="button" class="sos" id="sos-btn"
+        aria-describedby="sos-hint">SOS</button>
+    </div>
+    <div class="sos-count" id="sos-count" role="status" aria-live="assertive"></div>
+    <p class="sos-hint" id="sos-hint">Press and hold for <b>5 seconds</b> to call for immediate help</p>
+  </div>
   <div class="body">
     ${returnCard()}
-    <h2 class="sec">Need emergency help?</h2>
-    ${callBtn('CALL EMERGENCY SERVICES')}
     ${btn('REQUEST NEARBY RESPONDER', { variant: 'primary', go: 'U05' })}
     ${banner('info', 'Nearby responders provide community assistance.',
       'They are trained volunteers, not professional emergency services.')}
+    <h3 class="sectitle">Emergency Helplines</h3>
+    ${HELPLINES.map(([e, n, num, blue]) => `
+      <button type="button" class="helpline" data-act="call">
+        <span class="ic">${e}</span>
+        <span class="tx"><b>${n}</b><span>Tap to call</span></span>
+        <span class="num ${blue}">${num}</span>
+        <span class="go ${blue}">${I.phone}</span></button>`).join('')}
     ${S.incident.stage === 'none' || S.incident.stage === 'closed' ? `
-      <h3 class="sub">Prepare before an emergency</h3>
+      <h3 class="sectitle">Prepare before an emergency</h3>
       ${btn('Find training', { row: true, chev: true, go: 'U14' })}
-      ${btn('Try a practice scenario', { row: true, chev: true, go: 'U15' })}` : ''}
+      ${btn('Try a practice scenario', { row: true, chev: true, go: 'U15' })}
+      ${btn('Your activity', { row: true, chev: true, go: 'U16' })}` : ''}
   </div>
   ${tabbar('Home')}`
+});
+
+/* ============================ MEDICAL TAB ============================ */
+def('M01', {
+  group: 'Tabs', title: 'Medical info',
+  note: 'Self-reported information is labelled as such. First aid content stays a clinical-review placeholder — the prototype never writes treatment steps.',
+  render: () => {
+    const seg = (n) => `<button type="button" role="tab" aria-selected="${S.mtab === n}"
+      data-act="mtab" data-arg="${n}">${{ 'My Profile': '🧍', 'First Aid': '🩹', 'Nearby AEDs': '📍' }[n]} ${n}</button>`;
+    let inner = '';
+    if (S.mtab === 'My Profile') inner = `
+      <div class="idcard">
+        <div class="hd"><span class="avatar">M</span>
+          <span class="tx"><b>Meera Krishnan</b><span>DOB 14 Mar 1985 · Blood O+</span></span>
+          <span class="ice">ICE</span></div>
+        <div class="cells">
+          <div class="cell"><b>O+</b><span>Blood type</span></div>
+          <div class="cell"><b>62 kg</b><span>Weight</span></div>
+          <div class="cell"><b>162 cm</b><span>Height</span></div></div>
+      </div>
+      ${banner('warn', 'Self-reported information.', 'Entered by the account holder and not verified by a clinician.')}
+      <h3 class="sectitle">Conditions</h3>
+      <div class="medrow"><span class="e">🟡</span><span class="tx"><b>Type 2 diabetes</b></span><span class="when">Since 2019</span></div>
+      <div class="medrow"><span class="e">🔴</span><span class="tx"><b>Hypertension</b></span><span class="when">Since 2021</span></div>
+      <h3 class="sectitle">Medications</h3>
+      ${[['Metformin 500mg', 'Twice daily'], ['Amlodipine 5mg', 'Once daily'], ['Aspirin 75mg', 'Once daily']]
+        .map(([n, f]) => `<div class="medrow"><span class="e">💊</span>
+          <span class="tx"><b>${n}</b><span>${f}</span></span></div>`).join('')}
+      <div class="allergy"><span class="k">⚠️ Allergies</span>
+        <div class="tagrow">${['Penicillin', 'Shellfish', 'Latex'].map(t => `<span class="tag">${t}</span>`).join('')}</div></div>
+      ${btn('Who can see this?', { variant: 'quiet', row: true, chev: true, go: 'U20b' })}
+      ${btn('Edit medical information', { row: true, chev: true, go: 'U18' })}`;
+    else if (S.mtab === 'First Aid') inner = `
+      ${clinical('Step-by-step first aid guidance will appear here once approved by the programme&rsquo;s clinical partner.')}
+      <h3 class="sectitle">Planned topics</h3>
+      ${['Someone is unresponsive', 'Severe bleeding', 'Choking', 'Suspected fracture', 'Burns']
+        .map(t => `<button type="button" class="setrow"><span class="e">📘</span>
+          <span class="tx">${t}</span>${st('wait', 'Not yet approved')}</button>`).join('')}
+      ${banner('stop', 'No guidance is shown until it is reviewed.', 'The prototype will not generate first aid instructions.')}`;
+    else inner = `
+      ${map('Nearby AED locations', 'Illustrative map · sample locations')}
+      ${banner('warn', 'Sample locations only.', 'AED records must be verified with the owner before a pilot launch. Availability is not confirmed in real time.')}
+      ${[['Metro Station, Gate 2', '350 m', 'Listed · last checked 12 Sep'],
+         ['Community Hall', '700 m', 'Listed · last checked 2 Sep'],
+         ['Sector 4 Clinic', '1.1 km', 'Listed · last checked 28 Aug']]
+        .map(([n, d, m]) => `<div class="medrow"><span class="e">🔌</span>
+          <span class="tx"><b>${n}</b><span>${m}</span></span><span class="when">${d}</span></div>`).join('')}
+      ${btn('Report an AED that is missing or broken', { variant: 'quiet', row: true, chev: true })}`;
+    return `${appbar('Medical Info')}
+    <div class="body">
+      <div class="segmented" role="tablist" aria-label="Medical sections">
+        ${seg('My Profile')}${seg('First Aid')}${seg('Nearby AEDs')}</div>
+      ${inner}
+    </div>
+    ${tabbar('Medical')}`;
+  }
+});
+
+/* ============================ SAFE TRAVEL TAB ============================ */
+def('T01', {
+  group: 'Tabs', title: 'Safe Travel',
+  note: 'ETA is shown as the traveller&rsquo;s own plan, not a Swarn promise. Hazard alerts carry their age and source so stale reports are visible.',
+  render: () => `${appbar('<span class="lbl" style="font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--text-3);font-weight:700">Live monitoring</span><br>Safe Travel')}
+  <div class="body">
+    ${S.trip ? `
+    <div class="trip">
+      <div class="row"><span class="live"><i></i> Trip active</span></div>
+      <div class="row">
+        <span><span class="lbl">From</span><span class="place">Bengaluru</span></span>
+        <span aria-hidden="true">→</span>
+        <span style="text-align:right"><span class="lbl">To</span><span class="place">Mysuru</span></span>
+      </div>
+      <div class="cells">
+        <div class="cell"><b>09:00 AM</b><span>Departed</span></div>
+        <div class="cell"><b>11:45 AM</b><span>Planned arrival</span></div>
+        <div class="cell"><b>Car</b><span>Vehicle</span></div></div>
+      <div class="foot"><span>Shared with Priya Sharma, Rahul Kumar</span>
+        <button class="endbtn" data-act="endTrip">End Trip</button></div>
+    </div>
+    ${banner('info', 'Planned arrival is the time you entered.', 'Swarn does not predict arrival and does not track the vehicle.')}`
+    : `<div class="empty">No trip is active.<br />Start a trip to share it with your trusted contacts.</div>`}
+    <button type="button" class="dashed" data-act="startTrip">+ Start New Safe Trip</button>
+    <h3 class="sectitle">⚠️ Hazard Alerts Near Your Route</h3>
+    ${[['high', 'Road Closure', 'NH-275, km 48', '10 min ago'],
+       ['med', 'Heavy Rain', 'Mandya district', '30 min ago'],
+       ['high', 'Accident', 'Mysuru Ring Road', '5 min ago']]
+      .map(([sev, n, loc, age]) => `<div class="hazard"><span class="bar ${sev}"></span>
+        <span class="tx"><b>${n}</b><span>${loc}</span></span><span class="age">${age}</span></div>`).join('')}
+    ${banner('warn', 'Alerts are community-reported.', 'They are not verified by a traffic authority and may be out of date. Times shown are when each report was received.')}
+    <h3 class="sectitle">Safety Tips</h3>
+    <div class="tipgrid">
+      <div class="tip"><span class="e">⏱️</span>Check in every 2 hours on long trips.</div>
+      <div class="tip"><span class="e">📍</span>Share live location with family before departing.</div>
+      <div class="tip"><span class="e">🔋</span>Keep your phone charged and carry a cable.</div>
+      <div class="tip"><span class="e">🧰</span>Carry water and a basic first aid kit.</div>
+    </div>
+  </div>
+  ${tabbar('Safe Travel')}`
+});
+
+/* ============================ DONATE TAB ============================ */
+def('D01', {
+  group: 'Tabs', title: 'Donate',
+  note: 'Impact figures are sample programme inputs, labelled as prototype data. No survival rates or lives-saved claims — the brief rules those out as unsupported.',
+  render: () => `${appbar('Donate')}
+  <div class="body">
+    <div class="impact">
+      <span class="k">Programme funding — sample data</span>
+      <div class="cells">
+        <div class="cell"><b>12</b><span>AED units funded</span></div>
+        <div class="cell"><b>340</b><span>Volunteers trained</span></div>
+        <div class="cell"><b>4</b><span>Areas covered</span></div></div>
+      <span class="src">Figures are fictional prototype content. Swarn does not publish survival rates or lives-saved counts, which cannot be attributed to the service.</span>
+    </div>
+    ${['⚡|Mobile AED Deployment|Fund mobile AED units deployed in public spaces.|2.8L|5.0L|57|1243',
+       '🫀|First Aid Volunteer Training|Train community members in CPR and first aid.|1.8L|3.0L|59|892',
+       '🧰|Emergency Kit Distribution|Supply basic emergency kits to rural households.|98K|2.0L|49|541']
+      .map((c, i) => { const [e, t, d, r, g, pct, donors] = c.split('|');
+        return `<button type="button" class="campaign" aria-pressed="${S.campaign === i}"
+          data-act="campaign" data-arg="${i}">
+          <span class="hd"><span class="e">${e}</span><span><b>${t}</b><p>${d}</p></span></span>
+          <span class="bar-track"><span class="bar-fill" style="width:${pct}%"></span></span>
+          <span class="meta"><span>₹${r} raised</span><span>${pct}% of ₹${g} · ${donors} donors</span></span>
+        </button>`; }).join('')}
+    <h3 class="sectitle">Choose Amount</h3>
+    <div class="amtgrid">
+      ${['100', '500', '1000', '5000'].map(a => `<button type="button" class="amt"
+        aria-pressed="${S.amount === a}" data-act="amount" data-arg="${a}">₹${a}</button>`).join('')}
+    </div>
+    <div class="field"><label>Other amount</label>
+      <input class="input" value="${S.amount}" aria-label="Donation amount" /></div>
+    ${btn('Continue to payment', { variant: 'primary', act: 'donate' })}
+    ${banner('info', 'Donations fund the programme, not individual incidents.', 'You cannot pay to receive a faster response, and responders are volunteers.')}
+  </div>
+  ${tabbar('Donate')}`
+});
+
+/* ============================ SETTINGS TAB ============================ */
+def('S01', {
+  group: 'Tabs', title: 'Settings',
+  note: 'Auto-call is off by default: an automatic call is a consequential action, so it is opt-in and explained. Each switch states its state in text, not only by position.',
+  render: () => `${appbar('Settings')}
+  <div class="body">
+    <div class="profhead"><span class="avatar">M</span>
+      <span class="tx"><b>Meera Krishnan</b><span>meera.k@gmail.com</span>
+        <span>${S.signedIn ? '● Account active' : '● Guest session'}</span></span>
+      <button class="editbtn" data-go="U17">Edit</button></div>
+    <h3 class="sectitle">My Info</h3>
+    ${[['🧍', 'Edit Profile', 'U17'], ['🏥', 'Medical Records', 'M01'],
+       ['📞', 'Emergency Contacts', 'U19'], ['📋', 'Insurance Info', 'U18']]
+      .map(([e, t, go]) => `<button type="button" class="setrow" data-go="${go}">
+        <span class="e">${e}</span><span class="tx">${t}</span><span class="chev">${I.chev}</span></button>`).join('')}
+    <h3 class="sectitle">Notifications &amp; Safety</h3>
+    ${[['loc', 'Location Sharing', 'Share live location during emergencies', true],
+       ['vib', 'SOS Vibration', 'Vibrate phone when SOS is activated', true],
+       ['alert', 'Emergency Alerts', 'Receive alerts from nearby incidents', true],
+       ['auto', 'Auto Call 108', 'Automatically call an ambulance after SOS', false]]
+      .map(([id, n, d, def0]) => { const on = S.switches[id] ?? def0;
+        return `<div class="switchrow"><span class="tx"><b>${n}</b><span>${d}</span></span>
+          <span class="ios-state">${on ? 'On' : 'Off'}</span>
+          <button type="button" class="ios" role="switch" aria-checked="${on}"
+            aria-label="${n}" data-act="sw" data-arg="${id}"></button></div>`; }).join('')}
+    ${S.switches.auto ? banner('warn', 'Auto Call 108 is on.',
+      'After an SOS hold completes, your phone will place the call without a further confirmation. Opening a call still does not confirm ambulance dispatch.') : ''}
+    <h3 class="sectitle">App</h3>
+    ${[['🌐', 'Language and accessibility', 'U20a'], ['🔒', 'Privacy and permissions', 'U20b'],
+       ['🎓', 'Learn and training', 'U13'], ['🕘', 'Activity', 'U16'],
+       ['🦺', 'Responder programme', 'R01']]
+      .map(([e, t, go]) => `<button type="button" class="setrow" data-go="${go}">
+        <span class="e">${e}</span><span class="tx">${t}</span><span class="chev">${I.chev}</span></button>`).join('')}
+    ${btn('Sign out', { variant: 'danger-ghost' })}
+  </div>
+  ${tabbar('Settings')}`
 });
 
 def('U05', {
@@ -1261,7 +1478,8 @@ def('MAP', {
 
 /* ------------------------------------------------------------------ router */
 let current = 'MAP';
-const ORDER = ['MAP', 'U01', 'U02', 'U03', 'U03b', 'U04', 'U05', 'U06', 'U07', 'U08', 'U09', 'U10', 'U11', 'U12',
+const ORDER = ['MAP', 'U04', 'M01', 'T01', 'D01', 'S01',
+  'U01', 'U02', 'U03', 'U03b', 'U05', 'U06', 'U07', 'U08', 'U09', 'U10', 'U11', 'U12',
   'U13', 'U14', 'U14b', 'U15', 'U16', 'U17', 'U18', 'U19', 'U20a', 'U20b',
   'R01', 'R02', 'R03', 'R04', 'R05', 'R06', 'R07', 'R08', 'R09a', 'R09b',
   'C01', 'C02', 'C03', 'C04', 'C05',
@@ -1325,6 +1543,17 @@ function overlay() {
       ? 'In practice mode Swarn never places a call and never contacts a responder.'
       : 'Swarn hands the number to your phone. Opening a call does not confirm that an ambulance has been dispatched.'}</p>
     ${btn('Close', { variant: 'primary', act: 'closeModal' })}</div></div>`;
+  if (S.modal === 'sos') out += `<div class="scrim"><div class="modal" role="dialog" aria-modal="true" aria-label="SOS activated">
+    <h4>${S.practice ? 'Practice mode — no call placed' : 'SOS hold complete'}</h4>
+    ${S.practice
+      ? `<p class="fine">In practice mode Swarn never places a call, never alerts a responder, and never notifies your contacts.</p>`
+      : `${st('ok', 'Hold completed 18:52')}
+         <p class="fine">${S.switches.auto
+           ? 'Auto Call 108 is on, so your phone is placing the call now.'
+           : 'Your phone dialler is opening with 108. Placing a call does not confirm that an ambulance has been dispatched.'}</p>
+         ${S.switches.loc ? st('info', 'Location shared with your emergency contacts') : st('wait', 'Location sharing is off — contacts were not sent your location')}`}
+    ${S.practice ? '' : btn('Also request a nearby responder', { variant: 'primary', go: 'U05' })}
+    ${btn('Close', { variant: S.practice ? 'primary' : 'quiet', act: 'closeModal' })}</div></div>`;
   if (S.toast) out += `<div class="toast">${I.check}<div>${S.toast}</div></div>`;
   return out;
 }
@@ -1358,8 +1587,58 @@ const ACTIONS = {
   rArrive: () => { S.responder.arrivedAt = '18:51'; S.incident.stage = 'arrived'; go('R06'); },
   unable: () => { S.responder.assignment = null; S.toast = 'Coordinator notified. The requester has been told reassignment is in progress.'; go('X06'); },
   rClose: () => { S.responder.assignment = null; S.incident.stage = 'closed'; S.toast = 'Participation closed. No medical outcome was recorded.'; go('R09a'); },
-  coordClose: () => { S.incident.stage = 'closed'; S.toast = 'Incident closed with a recorded reason.'; go('C01'); }
+  coordClose: () => { S.incident.stage = 'closed'; S.toast = 'Incident closed with a recorded reason.'; go('C01'); },
+  mtab: (a) => { S.mtab = a; },
+  sw: (a) => { S.switches[a] = !S.switches[a]; },
+  campaign: (a) => { S.campaign = +a; },
+  amount: (a) => { S.amount = a; },
+  donate: () => { S.toast = 'Prototype only — no payment is taken and no card details are collected.'; },
+  startTrip: () => { S.trip = true; S.toast = 'Trip started. Your trusted contacts have been notified.'; },
+  endTrip: () => { S.trip = false; S.toast = 'Trip ended. Your contacts have been told you arrived safely.'; },
+  sosFired: () => { S.modal = 'sos'; }
 };
+
+/* ---- SOS press-and-hold (5s), releasable to cancel ---- */
+let hold = null;
+const SOS_MS = 5000;
+function sosStop(fired) {
+  if (!hold) return;
+  clearInterval(hold.timer);
+  const { btnEl, ring, count } = hold;
+  hold = null;
+  if (btnEl) btnEl.setAttribute('data-holding', 'false');
+  if (ring) ring.style.setProperty('--p', 0);
+  if (count) count.textContent = fired ? '' : 'Cancelled — nothing was sent.';
+  if (fired) { S.modal = 'sos'; render(); }
+}
+function sosStart(btnEl) {
+  const ring = document.getElementById('sos-ring');
+  const count = document.getElementById('sos-count');
+  const t0 = Date.now();
+  btnEl.setAttribute('data-holding', 'true');
+  /* a timer, not rAF: the countdown must keep running even when the page is
+     backgrounded or the viewer has motion reduced */
+  hold = { btnEl, ring, count, timer: 0 };
+  hold.timer = setInterval(() => {
+    if (!hold) return;
+    const elapsed = Date.now() - t0;
+    const pct = Math.min(100, (elapsed / SOS_MS) * 100);
+    ring.style.setProperty('--p', pct);
+    const left = Math.max(0, Math.ceil((SOS_MS - elapsed) / 1000));
+    count.textContent = left > 0 ? 'Keep holding — ' + left + 's' : '';
+    if (elapsed >= SOS_MS) sosStop(true);
+  }, 60);
+}
+document.addEventListener('pointerdown', (e) => {
+  const b = e.target.closest('#sos-btn');
+  if (b) { e.preventDefault(); sosStart(b); }
+});
+['pointerup', 'pointercancel', 'pointerleave'].forEach(ev =>
+  document.addEventListener(ev, (e) => { if (hold && e.target.closest('#sos-btn')) sosStop(false); }));
+document.addEventListener('keydown', (e) => {
+  if (e.target.id === 'sos-btn' && (e.key === 'Enter' || e.key === ' ') && !hold) { e.preventDefault(); sosStart(e.target); }
+});
+document.addEventListener('keyup', (e) => { if (e.target.id === 'sos-btn' && hold) sosStop(false); });
 
 document.addEventListener('click', (e) => {
   const t = e.target.closest('[data-go],[data-act]');

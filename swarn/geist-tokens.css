@@ -1,0 +1,211 @@
+/* ============================================================
+   Geist Design System — design tokens as CSS custom properties
+   Source: Vercel Geist (https://vercel.com/geist/introduction)
+   Captured from the live Geist stylesheet. Light-mode values.
+   Reference use.
+   ============================================================ */
+:root {
+  /* ---- Typography ---- */
+  --geist-font-sans: "Geist", "GeistSans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --geist-font-mono: "Geist Mono", "GeistMono", ui-monospace, "SF Mono", Menlo, Monaco, "Cascadia Mono", monospace;
+
+  /* ---- Spacing (base unit 4px) ---- */
+  --geist-space:      4px;
+  --geist-space-2x:   8px;
+  --geist-space-3x:   12px;
+  --geist-space-4x:   16px;
+  --geist-space-6x:   24px;
+  --geist-space-8x:   32px;
+  --geist-space-10x:  40px;
+  --geist-space-16x:  64px;
+  --geist-space-24x:  96px;
+  --geist-space-32x:  128px;
+  --geist-space-48x:  192px;
+  --geist-space-64x:  256px;
+  --geist-space-small:  32px;
+  --geist-space-medium: 36px;
+  --geist-space-large:  40px;
+  --geist-gap:          24px;
+  --geist-gap-half:     12px;
+  --geist-gap-quarter:  8px;
+
+  /* ---- Layout ---- */
+  --geist-page-width: 1200px;
+  --ds-page-width: 1400px;
+  --geist-page-margin: 24px;
+
+  /* ---- Radius ---- */
+  --geist-radius: 6px;
+  --geist-marketing-radius: 8px;
+
+  /* ---- Color scales — HSL triplets (1 lightest → 1000 darkest) ---- */
+  /* Gray */
+  --ds-gray-100: hsl(0, 0%, 95%);
+  --ds-gray-200: hsl(0, 0%, 92%);
+  --ds-gray-300: hsl(0, 0%, 90%);
+  --ds-gray-400: hsl(0, 0%, 92%);
+  --ds-gray-500: hsl(0, 0%, 79%);
+  --ds-gray-600: hsl(0, 0%, 66%);
+  --ds-gray-700: hsl(0, 0%, 56%);
+  --ds-gray-800: hsl(0, 0%, 49%);
+  --ds-gray-900: hsl(0, 0%, 30%);
+  --ds-gray-1000: hsl(0, 0%, 9%);
+
+  /* Gray alpha */
+  --ds-gray-alpha-100: #0000000d;
+  --ds-gray-alpha-200: #00000014;
+  --ds-gray-alpha-300: #0000001a;
+  --ds-gray-alpha-400: #00000014;
+  --ds-gray-alpha-500: #00000036;
+  --ds-gray-alpha-600: #00000057;
+  --ds-gray-alpha-700: #00000070;
+  --ds-gray-alpha-800: #00000082;
+  --ds-gray-alpha-900: #000000b3;
+  --ds-gray-alpha-1000: #000000e8;
+
+  /* Blue */
+  --ds-blue-100: hsl(212, 100%, 97%);
+  --ds-blue-200: hsl(210, 100%, 96%);
+  --ds-blue-300: hsl(210, 100%, 94%);
+  --ds-blue-400: hsl(209, 100%, 90%);
+  --ds-blue-500: hsl(209, 100%, 80%);
+  --ds-blue-600: hsl(208, 100%, 66%);
+  --ds-blue-700: hsl(212, 100%, 48%);
+  --ds-blue-800: hsl(212, 100%, 41%);
+  --ds-blue-900: hsl(211, 100%, 42%);
+  --ds-blue-1000: hsl(211, 100%, 15%);
+
+  /* Red */
+  --ds-red-100: hsl(0, 100%, 97%);
+  --ds-red-200: hsl(0, 100%, 96%);
+  --ds-red-300: hsl(0, 100%, 95%);
+  --ds-red-400: hsl(0, 90%, 92%);
+  --ds-red-500: hsl(0, 82%, 85%);
+  --ds-red-600: hsl(359, 90%, 71%);
+  --ds-red-700: hsl(358, 75%, 59%);
+  --ds-red-800: hsl(358, 70%, 52%);
+  --ds-red-900: hsl(358, 66%, 48%);
+  --ds-red-1000: hsl(355, 49%, 15%);
+
+  /* Amber */
+  --ds-amber-100: hsl(39, 100%, 95%);
+  --ds-amber-200: hsl(44, 100%, 92%);
+  --ds-amber-300: hsl(43, 96%, 90%);
+  --ds-amber-400: hsl(42, 100%, 78%);
+  --ds-amber-500: hsl(38, 100%, 71%);
+  --ds-amber-600: hsl(36, 90%, 62%);
+  --ds-amber-700: hsl(39, 100%, 57%);
+  --ds-amber-800: hsl(35, 100%, 52%);
+  --ds-amber-900: hsl(30, 100%, 32%);
+  --ds-amber-1000: hsl(20, 79%, 17%);
+
+  /* Green */
+  --ds-green-100: hsl(120, 60%, 96%);
+  --ds-green-200: hsl(120, 60%, 95%);
+  --ds-green-300: hsl(120, 60%, 91%);
+  --ds-green-400: hsl(122, 60%, 86%);
+  --ds-green-500: hsl(124, 60%, 75%);
+  --ds-green-600: hsl(125, 60%, 64%);
+  --ds-green-700: hsl(131, 41%, 46%);
+  --ds-green-800: hsl(132, 43%, 39%);
+  --ds-green-900: hsl(133, 50%, 32%);
+  --ds-green-1000: hsl(128, 29%, 15%);
+
+  /* Teal */
+  --ds-teal-100: hsl(169, 70%, 96%);
+  --ds-teal-200: hsl(167, 70%, 94%);
+  --ds-teal-300: hsl(168, 70%, 90%);
+  --ds-teal-400: hsl(170, 70%, 85%);
+  --ds-teal-500: hsl(170, 70%, 72%);
+  --ds-teal-600: hsl(170, 70%, 57%);
+  --ds-teal-700: hsl(173, 80%, 36%);
+  --ds-teal-800: hsl(173, 83%, 30%);
+  --ds-teal-900: hsl(174, 91%, 25%);
+  --ds-teal-1000: hsl(171, 80%, 13%);
+
+  /* Purple */
+  --ds-purple-100: hsl(276, 100%, 97%);
+  --ds-purple-200: hsl(277, 87%, 97%);
+  --ds-purple-300: hsl(274, 78%, 95%);
+  --ds-purple-400: hsl(276, 71%, 92%);
+  --ds-purple-500: hsl(274, 70%, 82%);
+  --ds-purple-600: hsl(273, 72%, 73%);
+  --ds-purple-700: hsl(272, 51%, 54%);
+  --ds-purple-800: hsl(272, 47%, 45%);
+  --ds-purple-900: hsl(274, 71%, 43%);
+  --ds-purple-1000: hsl(276, 100%, 15%);
+
+  /* Pink */
+  --ds-pink-100: hsl(330, 100%, 96%);
+  --ds-pink-200: hsl(340, 90%, 96%);
+  --ds-pink-300: hsl(340, 82%, 94%);
+  --ds-pink-400: hsl(341, 76%, 91%);
+  --ds-pink-500: hsl(340, 75%, 84%);
+  --ds-pink-600: hsl(341, 75%, 73%);
+  --ds-pink-700: hsl(336, 80%, 58%);
+  --ds-pink-800: hsl(336, 74%, 51%);
+  --ds-pink-900: hsl(336, 65%, 45%);
+  --ds-pink-1000: hsl(333, 74%, 15%);
+
+  /* Backgrounds */
+  --ds-background-100: hsl(0, 0%, 100%);
+  --ds-background-200: hsl(0, 0%, 98%);
+
+  /* Base */
+  --ds-black: #000;
+  --ds-white: #fff;
+  --geist-foreground: #000;
+  --geist-background: #fff;
+
+  /* ---- Semantic aliases (Geist naming) ---- */
+  --geist-link-color: var(--ds-blue-700);
+  --ds-focus-color: var(--ds-blue-700);
+
+  /* Status (legacy Geist palette) */
+  --geist-success:  #0070f3;  --geist-success-light: #3291ff;  --geist-success-lighter: #d3e5ff;  --geist-success-dark: #0761d1;
+  --geist-error:    #e00;     --geist-error-light:   #ff1a1a;  --geist-error-lighter:   #f7d4d6;  --geist-error-dark:   #c50000;
+  --geist-warning:  #f5a623;  --geist-warning-light: #f7b955;  --geist-warning-lighter: #ffefcf;  --geist-warning-dark: #ab570a;
+  --geist-violet:   #7928ca;  --geist-violet-light:  #8a63d2;  --geist-violet-lighter:  #d8ccf1;  --geist-violet-dark:  #4c2889;
+  --geist-cyan:     #50e3c2;  --geist-cyan-light:    #79ffe1;  --geist-cyan-lighter:    #aaffec;  --geist-cyan-dark:    #29bc9b;
+
+  /* Highlights */
+  --geist-highlight-purple:  #f81ce5;
+  --geist-highlight-magenta: #eb367f;
+  --geist-highlight-pink:    #ff0080;
+  --geist-highlight-yellow:  #fff500;
+
+  /* ---- Shadows / elevation ---- */
+  --ds-shadow-border-base: 0 0 0 1px #00000014;
+  --ds-shadow-2xs:    0px 1px 1px #0000000a;
+  --ds-shadow-xs:     0px 1px 2px #0000000a;
+  --ds-shadow-small:  0px 2px 2px #0000000a;
+  --ds-shadow-medium: 0px 2px 2px #0000000a, 0px 8px 8px -8px #0000000a;
+  --ds-shadow-large:  0px 2px 2px #0000000a, 0px 8px 16px -4px #0000000a;
+  --ds-shadow-xl:     0px 1px 1px #00000005, 0px 4px 8px -4px #0000000a, 0px 16px 24px -8px #0000000f;
+  --ds-shadow-2xl:    0px 1px 1px #00000005, 0px 8px 16px -4px #0000000a, 0px 24px 32px -8px #0000000f;
+  --ds-shadow-menu:   var(--ds-shadow-border-base), 0px 1px 1px #00000005, 0px 4px 8px -4px #0000000a, 0px 16px 24px -8px #0000000f;
+  --ds-shadow-modal:  var(--ds-shadow-border-base), 0px 1px 1px #00000005, 0px 8px 16px -4px #0000000a, 0px 24px 32px -8px #0000000f;
+
+  /* ---- Focus ring ---- */
+  --ds-focus-ring: 0 0 0 2px var(--ds-background-100), 0 0 0 4px var(--ds-focus-color);
+
+  /* ---- Motion ---- */
+  --ds-motion-timing-swift: cubic-bezier(.175, .885, .32, 1.1);
+  --ds-motion-overlay-duration: .3s;
+  --ds-motion-popover-duration: .2s;
+
+  /* ---- z-index ---- */
+  --ds-z-drawer: 200;
+  --ds-z-modal: 300;
+  --ds-z-menu: 2001;
+  --ds-z-toast: 5000;
+  --ds-z-tooltip: 99999;
+
+  /* ---- Form sizing ---- */
+  --geist-form-small-height: 32px;
+  --geist-form-height: 36px;
+  --geist-form-large-height: 40px;
+  --geist-form-small-font: .875rem;
+  --geist-form-font: .875rem;
+  --geist-form-large-font: 1rem;
+}
