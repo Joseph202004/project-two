@@ -249,3 +249,26 @@ h3.sub{margin-top:4px}
 .banner{font-size:12.5px; padding:10px 12px}
 .banner b{font-size:13px}
 p.fine{font-size:12px}
+
+/* ---- device frame: only the content scrolls, the footer never moves ----
+   The tab bar used to be position:sticky inside the scroller, which drifts and
+   can detach. It is now a flex sibling outside the scrolling element, so it is
+   structurally pinned to the bottom of the device. */
+.phone-screen{ overflow:hidden; position:relative }
+.screen-scroll{
+  flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain;
+  display:flex; flex-direction:column;
+}
+.tabbar{
+  position:static; flex:none; z-index:2;
+  border-top:1px solid var(--line); background:var(--surface);
+  padding-bottom:calc(10px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Fit the whole device in the viewport, so the outer page does not scroll the
+   footer out of sight. The device scrolls internally instead. */
+.phone-screen{ height: clamp(460px, calc(100vh - 210px), 752px) }
+.canvas{ padding-top:18px }
+@media (max-width:1080px){
+  .phone-screen{ height: clamp(420px, calc(100vh - 150px), 752px) }
+}

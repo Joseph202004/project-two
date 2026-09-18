@@ -1524,8 +1524,10 @@ function render() {
   if (s.kind === 'map') device = s.render();
   else if (s.kind === 'desktop') device = `<div class="desk"><div class="desk-screen">${s.render()}${overlay()}</div></div>`;
   else device = `<div class="phone"><div class="phone-screen">
-      <div class="statusbar"><span>18:52</span><span>Prototype</span></div>
-      ${pbar}${s.render()}${foot}${overlay()}</div></div>`;
+      <div class="screen-scroll">
+        <div class="statusbar"><span>18:52</span><span>Prototype</span></div>
+        ${pbar}${s.render()}
+      </div>${foot}${overlay()}</div></div>`;
 
   canvas.innerHTML = `
     <div class="screen-head"><span class="sid">${s.id}</span>
