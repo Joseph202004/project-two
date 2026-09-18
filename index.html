@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Two — ADY Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../portfolio/styles.css" />
+  <link rel="stylesheet" href="../portfolio/project.css" />
+</head>
+<body>
+  <header class="nav">
+    <a href="../portfolio/index.html" class="brand">ADY</a>
+    <nav>
+      <a href="../portfolio/index.html#projects">Projects</a>
+      <a href="../portfolio/index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="project-hero">
+      <a class="back" href="../portfolio/index.html#projects">← Back to projects</a>
+      <h1>Project Two</h1>
+      <p class="lead">Another highlight from your portfolio — keep it concise and impactful.</p>
+      <div class="tags"><span>CSS</span><span>UI</span></div>
+      <div class="cover"></div>
+    </section>
+
+    <section class="content">
+      <div class="meta">
+        <div><span>Role</span><strong>Designer</strong></div>
+        <div><span>Year</span><strong>2025</strong></div>
+        <div><span>Stack</span><strong>HTML, CSS</strong></div>
+      </div>
+
+      <h2>Overview</h2>
+      <p class="lead">Describe the project in a paragraph — the goal, the audience, and the outcome.</p>
+
+      <h2>What I did</h2>
+      <ul>
+        <li>Key contribution or feature you built.</li>
+        <li>Another highlight worth calling out.</li>
+        <li>A result, metric, or lesson learned.</li>
+      </ul>
+
+      <p style="margin-top:28px"><a class="btn primary" href="#">View live / repo →</a></p>
+    </section>
+  </main>
+
+  <footer><p>© <span id="year"></span> Your Name.</p></footer>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
