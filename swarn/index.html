@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Swarn Prototype</title>
+<meta name="description" content="Connected prototype for Swarn, a community emergency-response service: public app, responder mode, and coordinator dashboard." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="harness">
+  <nav class="side" id="side" aria-label="Screen index"></nav>
+  <div class="main">
+    <div class="topbar">
+      <span class="proto-tag">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 3a1 1 0 110 2 1 1 0 010-2zm1 9H7V7.5h2V13z"/></svg>
+        Prototype — fictional sample data
+      </span>
+      <span class="grow"></span>
+      <button class="tbtn" id="btn-reset" type="button">Reset state</button>
+      <button class="tbtn" id="btn-motion" type="button" aria-pressed="false">Reduce motion</button>
+      <button class="tbtn" id="btn-theme" type="button">Theme</button>
+    </div>
+    <div class="canvas" id="canvas"></div>
+  </div>
+</div>
+<div id="live" class="sr" role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+</body>
+</html>
